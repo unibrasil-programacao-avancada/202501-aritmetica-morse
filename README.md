@@ -1,39 +1,47 @@
-# Programação Avançada
+# Warmup - Aritmética Morse
 
-## Ferramentas para Desenvolvimento - Windows
-- [IDE Code::Blocks](https://www.fosshub.com/Code-Blocks.html?dwl=codeblocks-20.03mingw-setup.exe#)
-- [Git](https://github.com/git-for-windows/git/releases/download/v2.48.1.windows.1/Git-2.48.1-64-bit.exe)
+## Integrantes do Grupo
 
-### Instalação e Configuração da Biblioteca MPI - Windows
+- **Brayan Pereira** - RA: 2023100832
+- **Bernardo Rodrigues** - RA: 2023100357
+- **João Gabriel** - RA: 2023100603
 
-- Faça o download dos dois instaladores _msmpisdk.msi_ e _msmpisetup.exe_ da biblioteca através do link [Microsoft MPI v10.0](https://www.microsoft.com/en-us/download/details.aspx?id=57467)
-- Para configurar a biblioteca no Code::Blocks, siga o tutorial em vídeo disponível no [YouTube - Installing MPI Library on CodeBlocks](https://www.youtube.com/watch?v=eFKLxnbAhWk) 
+## Solução
 
-#### Testando a Biblioteca
+### Estrutura do Projeto
 
-- Crie um projeto C no Code::Blocks. Siga o tutorial disponível no [vídeo](https://www.youtube.com/watch?v=OE3VbaqGQWM).
-- Copie o código C disponível no [gist](https://gist.github.com/tnas/cd596149bdc28ec564017387bf90d05c).
-- Cole o código no arquivo `main.c` gerado na criação do projeto C.
-- Compile e execute o código.
+- **Sources:** Contém o código-fonte principal, incluindo o arquivo `warmup.c` e a lógica de resolução no `warmup_solver.c`.
+- **Headers:** Contém o arquivo de cabeçalho `warmup_solver.h` com a definição das funções.
+- **02-aritmetica-morse:** Contém o diretório `input/` com arquivos de instâncias numeradas de `instance_1` até `instance_112`.
+- **output:** O arquivo `solution.txt` será gerado aqui com os resultados das expressões.
 
-#### Executando Múltiplos Processos
+### Como o Programa Funciona
 
-- Acesse o diretório `bin\Debug` do projeto pela linha de comando.
-- Execute o comando `mpiexec -n 4 <NOME DO ARQUIVO .EXE>`. Serão executados 4 processos do programa.
-    - Altere o valor do parâmetro `-n` para a quantidade de processos que queira executar.
+O programa lê os arquivos de instâncias do diretório `input/` e processa cada um de acordo com o formato definido. Para cada instância, ele:
 
-### Configuração da Biblioteca OpenMP no Code::Blocks - Windows
+1. Converte os números Morse (como `.`, `-`, `:`, `=`) para valores inteiros usando a função `morse_to_value`.
+2. Avalia a expressão matemática respeitando a precedência dos operadores (soma `+` e multiplicação `*`) com a função `evaluate_expression`.
+3. O resultado da expressão é gravado no arquivo `solution.txt`, localizado no diretório `output/`.
 
-- Abra a janela de configuração em `Settings > Compiler... > Linker settings`
-- Acione o botão "Add"
-- Localize a biblioteca no caminho `C:\Program Files\CodeBlocks\MinGW\lib\gcc\x86_64-w64-mingw32\8.1.0\libgomp.dll.a`
+### Funções
 
-## Warm-Up
+- **morse_to_value**: Converte caracteres Morse (`.`, `-`, `:`, `=`) para seus valores inteiros correspondentes.
+- **parse_morse_number**: Converte uma sequência de caracteres Morse em um número inteiro.
+- **evaluate_expression**: Avalia uma expressão matemática usando um array de valores e operadores. Suporta operações de soma e multiplicação.
+- **solve_warmup**: Processa um arquivo de instância, converte os números Morse e avalia a expressão. O resultado é gravado no arquivo `solution.txt`.
+- **check_warmup_solution**: Verifica se a solução gerada está correta. (Atualmente, sempre retorna sucesso no código).
+- **main**: Lê os arquivos do diretório `input/`, processa as instâncias usando as funções acima e gera a solução no arquivo `solution.txt`.
 
-Para compilar o código:
+### Como Executar
 
-`gcc -Wall warmup.c solver/warmup_solver.c -o warmup`
+#### Configuração do Ambiente
 
-Para executar o código:
+1. **Arquivos de Instância:** Certifique-se de que os arquivos de instância (no formato `instance_X`) estão localizados no diretório `02-aritmetica-morse/input/`.
+2. **Diretório de Saída:** O arquivo de solução, `solution.txt`, será gerado no diretório `output/`.
 
-`./warmup`
+#### Compilação
+
+Compile o código-fonte usando o comando:
+
+```bash
+gcc -o warmup warmup.c warmup_solver.c
