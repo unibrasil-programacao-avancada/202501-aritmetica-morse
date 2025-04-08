@@ -24,6 +24,7 @@ int parse_morse_number(const char* morse) {
     return value;
 }
 
+// Avaliação com associatividade da esquerda para a direita
 int evaluate_expression(int values[], char operators[], int n) {
     int result = values[0];
     for (int i = 0; i < n; i++) {
@@ -36,11 +37,47 @@ int evaluate_expression(int values[], char operators[], int n) {
     return result;
 }
 
+// FUNÇÃO CORRIGIDA AQUI:
 int check_warmup_solution(const char* file_name, const char* warmup_instance) {
+    FILE *fanswer, *fsolution;
+    char answer_line[100], solution_line[100], answer_file[100];
+    int is_correct = 1;
 
-    return 1;
+    answer_file[0] = '\0';
+    strcat(answer_file, warmup_instance);
+    strcat(answer_file, OUTPUT_DIR);
+    strcat(answer_file, file_name);
+
+    fanswer = fopen(answer_file, "r");
+    if (fanswer == NULL) {
+        printf("Arquivo de resposta '%s' não pôde ser aberto\n", answer_file);
+        return 0;
+    }
+
+    fsolution = fopen(SOLUTION_FILE, "r");
+    if (fsolution == NULL) {
+        printf("Arquivo de solução '%s' não pôde ser aberto\n", SOLUTION_FILE);
+        fclose(fanswer);
+        return 0;
+    }
+
+    while (fgets(answer_line, sizeof(answer_line), fanswer)) {
+        if (!fgets(solution_line, sizeof(solution_line), fsolution) || strcmp(answer_line, solution_line) != 0) {
+            is_correct = 0;
+            break;
+        }
+    }
+
+    if (fgets(solution_line, sizeof(solution_line), fsolution)) {
+        is_correct = 0;
+    }
+
+    fclose(fanswer);
+    fclose(fsolution);
+    return is_correct;
 }
 
+// RESOLUÇÃO PRINCIPAL
 void solve_warmup(FILE* ptr_in_file, char* file_name, const char* warmup_instance) {
     FILE *fwsolptr;
     int n;
@@ -65,15 +102,16 @@ void solve_warmup(FILE* ptr_in_file, char* file_name, const char* warmup_instanc
 
     int result = evaluate_expression(values, operators, n);
 
-    if (check_warmup_solution(file_name, warmup_instance)) {
-        fwsolptr = fopen(SOLUTION_FILE, "w");
-        if (fwsolptr == NULL) {
-            printf("Erro ao abrir %s\n", SOLUTION_FILE);
-            exit(1);
-        }
-        fprintf(fwsolptr, "%d\n", result);
-        fclose(fwsolptr);
-    } else {
-        printf("A solução não passou na verificação.\n");
+    fwsolptr = fopen(SOLUTION_FILE, "w");
+    if (fwsolptr == NULL) {
+        printf("Erro ao abrir %s\n", SOLUTION_FILE);
+        exit(1);
+    }
+    fprintf(fwsolptr, "%d\n", result);
+    fclose(fwsolptr);
+
+    // Aqui ele chama o verificador após salvar a solução
+    if (!check_warmup_solution(file_name, warmup_instance)) {
+        printf("A solução não está correta.\n");
     }
 }
