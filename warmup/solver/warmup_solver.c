@@ -24,20 +24,29 @@ int parse_morse_number(const char* morse) {
     return value;
 }
 
-// Avaliação com associatividade da esquerda para a direita
+// AVALIAÇÃO CORRIGIDA COM PRECEDÊNCIA
 int evaluate_expression(int values[], char operators[], int n) {
+    // Primeiro resolve multiplicações
+    for (int i = 0; i < n; i++) {
+        if (operators[i] == '*') {
+            values[i] = values[i] * values[i + 1];
+            values[i + 1] = 1;          // Valor neutro para multiplicação
+            operators[i] = '+';         // Transforma * em + para ignorar no segundo loop
+        }
+    }
+
+    // Depois resolve somas
     int result = values[0];
     for (int i = 0; i < n; i++) {
         if (operators[i] == '+') {
             result += values[i + 1];
-        } else if (operators[i] == '*') {
-            result *= values[i + 1];
         }
     }
+
     return result;
 }
 
-// FUNÇÃO CORRIGIDA AQUI:
+// FUNÇÃO DE VERIFICAÇÃO
 int check_warmup_solution(const char* file_name, const char* warmup_instance) {
     FILE *fanswer, *fsolution;
     char answer_line[100], solution_line[100], answer_file[100];
@@ -50,13 +59,13 @@ int check_warmup_solution(const char* file_name, const char* warmup_instance) {
 
     fanswer = fopen(answer_file, "r");
     if (fanswer == NULL) {
-        printf("Arquivo de resposta '%s' não pôde ser aberto\n", answer_file);
+        printf("Arquivo de resposta '%s' nao pode ser aberto\n", answer_file);
         return 0;
     }
 
     fsolution = fopen(SOLUTION_FILE, "r");
     if (fsolution == NULL) {
-        printf("Arquivo de solução '%s' não pôde ser aberto\n", SOLUTION_FILE);
+        printf("Arquivo de solucao '%s' nao pode ser aberto\n", SOLUTION_FILE);
         fclose(fanswer);
         return 0;
     }
@@ -110,8 +119,8 @@ void solve_warmup(FILE* ptr_in_file, char* file_name, const char* warmup_instanc
     fprintf(fwsolptr, "%d\n", result);
     fclose(fwsolptr);
 
-    // Aqui ele chama o verificador após salvar a solução
+    // Verifica se a solução está correta
     if (!check_warmup_solution(file_name, warmup_instance)) {
-        printf("A solução não está correta.\n");
+        printf("A solucao nao esta correta.\n");
     }
 }
