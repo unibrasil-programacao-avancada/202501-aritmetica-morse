@@ -44,4 +44,5 @@ O programa lê os arquivos de instâncias do diretório `input/` e processa cada
 Compile o código-fonte usando o comando:
 
 ```bash
-gcc -o warmup warmup.c warmup_solver.c
+gcc -I../include -o warmup warmup.c solver/warmup_solver.c
+./warmup.exe
