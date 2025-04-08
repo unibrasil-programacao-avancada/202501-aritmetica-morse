@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <string.h>
+
 #include "include/warmup_solver.h"
 
 const char FILE_PREFIX[] = "instance_";
@@ -18,7 +19,7 @@ int main() {
     dir = opendir(input_dir);
 
     if (dir == NULL) {
-        printf("Erro ao abrir o diretorio '%s'. Verifique o caminho e as permissoes.\n", input_dir);
+        printf("Erro ao abrir o diretório '%s'. Verifique o caminho e as permissões.\n", input_dir);
         return 1;
     }
 
@@ -40,15 +41,14 @@ int main() {
             return 1;
         }
 
-        solve_warmup(fptr, str_dir->d_name, "02-aritmetica-morse");
-
+        // Adicionamos a / no final do caminho para formar corretamente os caminhos de saída
+        solve_warmup(fptr, str_dir->d_name, "02-aritmetica-morse/");
         printf("Verificando a solucao do arquivo: %s\n", str_dir->d_name);
-        success = check_warmup_solution(str_dir->d_name, "02-aritmetica-morse");
+        success = check_warmup_solution(str_dir->d_name, "02-aritmetica-morse/");
 
         if (success) {
             total_success++;
         } else {
-            printf("A solucao nao esta correta.\n");
             total_failures++;
         }
 
