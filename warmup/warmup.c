@@ -14,7 +14,7 @@ int main() {
     char input_dir[200], file_path[200];
 
     //ALTERE O CAMINHO DA PASTA **********************
-    strcpy(input_dir, "C:\\Users\\2023100603\\Desktop\\root\\warmup\\02-aritmetica-morse\\input\\");
+    strcpy(input_dir, "strcpy(input_dir, "02-aritmetica-morse/input/");
 
 
 
