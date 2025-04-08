@@ -13,9 +13,8 @@ int main() {
     struct dirent *str_dir;
     char input_dir[200], file_path[200];
 
-    //ALTERE O CAMINHO DA PASTA **********************
-    strcpy(input_dir, "strcpy(input_dir, "02-aritmetica-morse/input/");
-
+    // Caminho relativo à pasta do projeto
+    strcpy(input_dir, "02-aritmetica-morse/input/");
 
 
     dir = opendir(input_dir);
