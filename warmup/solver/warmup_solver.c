@@ -24,27 +24,40 @@ int parse_morse_number(const char* morse) {
     return value;
 }
 
-// AVALIAÇÃO CORRIGIDA COM PRECEDÊNCIA
+// AVALIAÇÃO DA DIREITA PARA A ESQUERDA COM PRECEDÊNCIA (* antes de +)
 int evaluate_expression(int values[], char operators[], int n) {
-    // Primeiro resolve multiplicações
-    for (int i = 0; i < n; i++) {
+    // Primeiro, resolve multiplicações da direita para a esquerda
+    for (int i = n - 1; i >= 0; i--) {
         if (operators[i] == '*') {
             values[i] = values[i] * values[i + 1];
-            values[i + 1] = 1;          // Valor neutro para multiplicação
-            operators[i] = '+';         // Transforma * em + para ignorar no segundo loop
+
+            // Desloca todos os valores e operadores após a multiplicação
+            for (int j = i + 1; j < n; j++) {
+                values[j] = values[j + 1];
+                operators[j - 1] = operators[j];
+            }
+
+            n--; // Reduz o número de operadores/valores
         }
     }
 
-    // Depois resolve somas
-    int result = values[0];
-    for (int i = 0; i < n; i++) {
-        if (operators[i] == '+') {
-            result += values[i + 1];
+    // Depois, resolve somas da direita para a esquerda
+    for (int i = n - 1; i >= 0; i--) {
+        values[i] = values[i] + values[i + 1];
+
+        // Desloca os valores e operadores
+        for (int j = i + 1; j < n; j++) {
+            values[j] = values[j + 1];
+            operators[j - 1] = operators[j];
         }
+
+        n--;
     }
 
-    return result;
+    return values[0];
 }
+
+
 
 // FUNÇÃO DE VERIFICAÇÃO
 int check_warmup_solution(const char* file_name, const char* warmup_instance) {
@@ -70,21 +83,27 @@ int check_warmup_solution(const char* file_name, const char* warmup_instance) {
         return 0;
     }
 
-    while (fgets(answer_line, sizeof(answer_line), fanswer)) {
-        if (!fgets(solution_line, sizeof(solution_line), fsolution) || strcmp(answer_line, solution_line) != 0) {
-            is_correct = 0;
-            break;
-        }
-    }
+    if (fgets(answer_line, sizeof(answer_line), fanswer) && fgets(solution_line, sizeof(solution_line), fsolution)) {
+        // Remover quebras de linha
+        answer_line[strcspn(answer_line, "\r\n")] = 0;
+        solution_line[strcspn(solution_line, "\r\n")] = 0;
+        printf("Esperado: %s\n", answer_line);
+        printf("Obtido  : %s\n", solution_line);
 
-    if (fgets(solution_line, sizeof(solution_line), fsolution)) {
+        if (strcmp(answer_line, solution_line) != 0) {
+            is_correct = 0;
+        }
+    } else {
+        printf("\nErro ao ler as linhas de resposta ou solução.\n");
         is_correct = 0;
     }
 
     fclose(fanswer);
     fclose(fsolution);
+
     return is_correct;
 }
+
 
 // RESOLUÇÃO PRINCIPAL
 void solve_warmup(FILE* ptr_in_file, char* file_name, const char* warmup_instance) {
