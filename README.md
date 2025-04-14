@@ -45,4 +45,7 @@ Compile o código-fonte usando o comando:
 
 ```bash
 gcc -I../include -o warmup warmup.c solver/warmup_solver.c
+```
+Proxima execusão:
+```bash
 ./warmup.exe
